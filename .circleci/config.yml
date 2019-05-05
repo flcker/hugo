@@ -3,18 +3,33 @@ version: 2
 jobs:
   build:
     branches:
+      only:
+        - master
       ignore:
         - gh-pages
     docker:
-      - image: flcker/hugo:latest
+    #  - image: flcker/hugo:latest
     working_directory: ~/hugo
     environment:
       HUGO_BUILD_DIR: ~/hugo/public
+      HUGO_VERSION: 0.55.5
+      HUGO_ARCH: 64bit
+      HUGO_SYSTEM: Linux
+      HUGO_TMP: /tmp/hugo
     steps:
-      # create work dir
-      #- run: mkdir -p ~/hugo
+
       # install git
-      #- run: apk update && apk add git
+      - run: apk update && apk add git openssh-client
+
+      # create tmp dir
+      - run: mkdir -p $HUGO_TMP
+      
+      # download hugo bin
+      - run: curl -fSL https://github.com/gohugoio/hugo/releases/download/v$HUGO_VERSION/hugo_$HUGO_VERSION_$HUGO_SYSTEM-$HUGO_ARCH.tar.gz -o hugo.tar.gz \
+        && tar -zxf hugo.tar.gz -C ${HUGO_TMP} \
+        && rm hugo.tar.gz \
+        && mv $HUGO_TMP/hugo /usr/bin \
+        && rm -rf ${HUGO_TMP}
 
       # checkout the repository
       - checkout
@@ -30,7 +45,7 @@ jobs:
       - run: HUGO_ENV=production hugo -v -d $HUGO_BUILD_DIR
 
       # Set some variables to add to the commit message
-      - run: git config --global user.email "molanyousi@gmail.com" && git config --global user.name "liujiankang"
+      - run: git config --global user.email "molanyousi@gmail.com" && git config --global user.name "flcker"
 
       # Push the generated files back to github
       - run: cd $HUGO_BUILD_DIR && git add --all && git commit -m "Automated publish to gh-pages [ci skip]" && git push
