@@ -25,11 +25,10 @@ jobs:
       - run: mkdir -p $HUGO_TMP
       
       # download hugo bin
-      - run: curl -fSL https://github.com/gohugoio/hugo/releases/download/v$HUGO_VERSION/hugo_$HUGO_VERSION_$HUGO_SYSTEM-$HUGO_ARCH.tar.gz -o hugo.tar.gz \
-        && tar -zxf hugo.tar.gz -C ${HUGO_TMP} \
-        && rm hugo.tar.gz \
-        && mv $HUGO_TMP/hugo /usr/bin \
-        && rm -rf ${HUGO_TMP}
+      - run: curl -fSL https://github.com/gohugoio/hugo/releases/download/v$HUGO_VERSION/hugo_$HUGO_VERSION_$HUGO_SYSTEM-$HUGO_ARCH.tar.gz -o hugo.tar.gz
+      - run: tar -zxf hugo.tar.gz -C $HUGO_TMP
+      - run: rm hugo.tar.gz
+      - run: mv $HUGO_TMP/hugo /usr/bin && rm -rf $HUGO_TMP
 
       # checkout the repository
       - checkout
