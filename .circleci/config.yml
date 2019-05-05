@@ -8,7 +8,7 @@ jobs:
       ignore:
         - gh-pages
     docker:
-    #  - image: flcker/hugo:latest
+      - image: flcker/hugo:latest
     working_directory: ~/hugo
     environment:
       HUGO_BUILD_DIR: ~/hugo/public
