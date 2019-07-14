@@ -10,8 +10,9 @@ jobs:
     docker:
       - image: cibuilds/hugo:0.55.5
       #- image: flcker/hugo:latest
-    working_directory: ~/hugo
+    working_directory: ~/hugo/
     environment:
+      HUGO_SRC_DIR: ./hugo_sites
       HUGO_BUILD_DIR: ./hugo_public
       HUGO_VERSION: 0.55.5
       HUGO_ARCH: 64bit
@@ -42,7 +43,7 @@ jobs:
       - run: rm -fr $HUGO_BUILD_DIR && git worktree add -B gh-pages $HUGO_BUILD_DIR origin/gh-pages
       - run: pwd && ls -al
       # build with Hugo
-      - run: HUGO_ENV=production hugo -v -d $HUGO_BUILD_DIR
+      - run: HUGO_ENV=production hugo -v -d $HUGO_BUILD_DIR -s $HUGO_SRC_DIR
 
       # Set some variables to add to the commit message
       - run: git config --global user.email "molanyousi@gmail.com" && git config --global user.name "flcker"
